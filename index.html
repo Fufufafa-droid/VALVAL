@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valdy // Tech & Basketball Blog</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#00ff9d;--cyan:#00e5ff;--orange:#ff6b1a;--bg:#0a0e14;--card:#0f1620;--muted:#94a3b8;--dim:#64748b}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:#e0e0e0;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:80rem;margin:0 auto;padding:0 1.25rem}
+.neon-g{color:var(--green);text-shadow:0 0 5px rgba(0,255,157,.5),0 0 20px rgba(0,255,157,.3)}
+.neon-c{color:var(--cyan);text-shadow:0 0 5px rgba(0,229,255,.5),0 0 20px rgba(0,229,255,.3)}
+.neon-o{color:var(--orange);text-shadow:0 0 5px rgba(255,107,26,.5),0 0 20px rgba(255,107,26,.3)}
+.gradient-text{background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.grid-bg{background-image:linear-gradient(rgba(0,255,157,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,157,.05) 1px,transparent 1px);background-size:50px 50px}
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:1;background:linear-gradient(to bottom,transparent 50%,rgba(0,255,157,.03) 50%);background-size:100% 4px}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.cursor{animation:blink 1s step-end infinite}
+@keyframes fadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .8s ease forwards}
+@keyframes glitch{0%,100%{transform:translate(0)}20%{transform:translate(-1px,1px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-1px,0)}80%{transform:translate(1px,1px)}}
+.glitch:hover{animation:glitch .4s linear}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--green),var(--cyan));border-radius:5px}
+
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.15;pointer-events:none}
+
+#login{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .7s}
+.login-box{width:100%;max-width:28rem;padding:0 1.25rem;position:relative;z-index:10}
+.login-window{border:1px solid rgba(0,255,157,.3);background:rgba(10,14,20,.95);box-shadow:0 0 60px rgba(0,255,157,.15);overflow:hidden}
+.login-bar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid rgba(0,255,157,.2);background:var(--card)}
+.dot{width:12px;height:12px;border-radius:50%}
+.login-body{padding:1.25rem}
+#bootLines{min-height:200px;max-height:240px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.6}
+.login-input{width:100%;border:1px solid rgba(0,255,157,.3);background:var(--card);padding:.625rem 1rem .625rem 2.5rem;font-family:'JetBrains Mono',monospace;font-size:.875rem;color:#fff;outline:none;margin-bottom:1rem}
+.login-input:focus{border-color:var(--green);box-shadow:0 0 15px rgba(0,255,157,.15)}
+.login-btn{width:100%;padding:.625rem;background:var(--green);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;transition:all .15s}
+.login-btn:hover{background:#b8ffdf;box-shadow:0 0 25px rgba(0,255,157,.3)}
+.progress-bar{height:8px;border:1px solid rgba(0,255,157,.2);background:var(--card);overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,var(--green),var(--cyan));transition:width .075s}
+
+header{position:fixed;top:0;width:100%;z-index:50;border-bottom:1px solid rgba(0,255,157,.1);background:rgba(10,14,20,.85);backdrop-filter:blur(16px)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;max-width:80rem;margin:0 auto}
+.logo{display:flex;align-items:center;gap:.75rem}
+.logo-mark{width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,255,157,.7);background:rgba(0,255,157,.05);color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:700;box-shadow:0 0 15px rgba(0,255,157,.25);transition:transform .15s}
+.logo:hover .logo-mark{transform:rotate(12deg)}
+.nav-desktop{display:none;align-items:center;gap:2rem}
+.nav-desktop a{font-family:'JetBrains Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);transition:color .15s}
+.nav-desktop a:hover{color:var(--green)}
+.nav-mobile{display:none;border-top:1px solid rgba(0,255,157,.1);background:var(--bg);padding:1.25rem}
+.nav-mobile a{display:block;padding:.75rem 0;border-bottom:1px solid rgba(0,255,157,.1);font-family:'JetBrains Mono',monospace;font-size:.75rem;text-transform:uppercase;color:var(--muted)}
+.menu-btn{color:var(--green)}
+.online-badge{display:none;align-items:center;gap:.5rem;border:1px solid rgba(0,255,157,.4);padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;text-transform:uppercase;color:var(--green);transition:all .15s}
+.online-badge:hover{background:var(--green);color:var(--bg)}
+
+section{position:relative;z-index:10}
+.hero{display:flex;min-height:100vh;align-items:center;padding:8rem 1.25rem 4rem;max-width:80rem;margin:0 auto}
+.hero-grid{display:grid;gap:4rem;width:100%}
+.hero-text{max-width:36rem}
+.hero-title{font-size:3rem;font-weight:700;line-height:1.05;color:#fff;margin-bottom:1.75rem}
+.hero-sub{display:flex;align-items:center;gap:.75rem;font-family:'JetBrains Mono',monospace;font-size:.875rem;color:var(--muted);margin-bottom:1.75rem}
+.hero-desc{font-size:1rem;line-height:1.625;color:var(--muted);margin-bottom:2.5rem}
+.hero-btns{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:3.5rem}
+.btn-primary{display:flex;align-items:center;gap:.5rem;background:var(--green);color:var(--bg);padding:.75rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;transition:all .15s}
+.btn-primary:hover{background:#b8ffdf;box-shadow:0 10px 30px rgba(0,255,157,.25)}
+.btn-ghost{display:flex;align-items:center;gap:.5rem;border:1px solid rgba(148,163,184,.3);padding:.75rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;text-transform:uppercase;color:var(--muted);transition:all .15s}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.hero-stats{display:flex;flex-wrap:wrap;gap:2rem;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--dim)}
+.hero-stats b{font-size:1.125rem}
+.hero-visual{position:relative;display:flex;min-height:420px;align-items:center;justify-content:center}
+.hero-visual .grid-bg{position:absolute;inset:0;opacity:.3}
+.hero-visual .glow{position:absolute;width:18rem;height:18rem;border-radius:50%;background:rgba(0,255,157,.05);filter:blur(64px)}
+
+.bball-wrap{perspective:1000px;display:flex;align-items:center;justify-content:center}
+@keyframes spinBall{0%{transform:rotateY(0) rotateX(15deg)}100%{transform:rotateY(360deg) rotateX(15deg)}}
+@keyframes floatBall{0%,100%{translate:0 0}50%{translate:0 -20px}}
+.bball{position:relative;width:140px;height:140px;animation:spinBall 6s linear infinite,floatBall 4s ease-in-out infinite;transform-style:preserve-3d}
+.bball .skin{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8c42,#ff6b1a 40%,#cc4400 80%,#882200);box-shadow:inset -15px -15px 40px rgba(0,0,0,.5),0 0 40px rgba(255,107,26,.4)}
+.bball .line-v{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(40,15,0,.7);clip-path:polygon(48% 0,52% 0,52% 100%,48% 100%)}
+.bball .line-h{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(40,15,0,.7);clip-path:polygon(0 48%,100% 48%,100% 52%,0 52%)}
+.bball .shine{position:absolute;border-radius:50%;width:30%;height:30%;top:15%;left:20%;background:radial-gradient(circle,rgba(255,255,255,.4),transparent 70%)}
+
+@keyframes spinLaptop{0%{transform:rotateY(0) rotateX(20deg)}100%{transform:rotateY(-360deg) rotateX(20deg)}}
+@keyframes floatLaptop{0%,100%{translate:0 0}50%{translate:0 15px}}
+.laptop{position:relative;width:180px;height:120px;animation:spinLaptop 8s linear infinite,floatLaptop 5s ease-in-out infinite;transform-style:preserve-3d}
+.laptop .screen{position:absolute;width:180px;height:110px;background:linear-gradient(135deg,#0a0e14,#0f1620);border:2px solid var(--green);border-radius:8px 8px 2px 2px;box-shadow:0 0 30px rgba(0,255,157,.3),inset 0 0 20px rgba(0,255,157,.1);transform:translateZ(2px);padding:.5rem;font-family:'JetBrains Mono',monospace;font-size:7px;line-height:1.25}
+.laptop .base{position:absolute;bottom:0;width:200px;height:10px;left:-10px;background:linear-gradient(135deg,#1a2330,#0f1620);border:1px solid rgba(0,255,157,.3);border-radius:2px 2px 8px 8px;transform:rotateX(60deg) translateZ(-5px)}
+
+@keyframes cubeSpin{0%{transform:rotateX(0) rotateY(0)}100%{transform:rotateX(360deg) rotateY(360deg)}}
+.cube-wrap{perspective:1000px;display:flex;align-items:center;justify-content:center;width:200px;height:200px}
+.cube{position:relative;width:120px;height:120px;animation:cubeSpin 12s linear infinite;transform-style:preserve-3d}
+.cube-face{position:absolute;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700}
+
+.about{border-top:1px solid rgba(0,255,157,.1);border-bottom:1px solid rgba(0,255,157,.1);background:rgba(12,18,26,.8);padding:6rem 0}
+.about-grid{display:grid;gap:3.5rem;align-items:center}
+.about-img{position:relative;max-width:24rem;margin:0 auto;overflow:hidden;border:1px solid rgba(0,229,255,.3);background:var(--card);padding:.5rem;box-shadow:0 0 40px rgba(0,229,255,.08)}
+.about-img img{width:100%;height:20rem;object-fit:cover;opacity:.7;filter:grayscale(100%);transition:all .7s}
+.about-img img:hover{transform:scale(1.05);opacity:.9;filter:grayscale(0)}
+.about-text h2{font-size:2.25rem;font-weight:700;color:#fff;margin-bottom:1.5rem}
+.about-text p{max-width:42rem;line-height:1.625;color:var(--muted);margin-bottom:1.25rem}
+.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2.25rem}
+.skill{border:1px solid rgba(255,255,255,.1);background:var(--bg);padding:1rem;text-align:center;transition:border-color .15s}
+.skill:hover{border-color:rgba(0,255,157,.4)}
+.skill span{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--dim)}
+
+.journal{padding:6rem 0}
+.journal-head{display:flex;flex-direction:column;justify-content:space-between;gap:1.25rem;margin-bottom:3.5rem}
+.journal-head h2{font-size:2.25rem;font-weight:700;color:#fff}
+.cards{display:grid;gap:1.5rem}
+.card{overflow:hidden;border:1px solid rgba(255,255,255,.1);background:var(--card);transition:transform .4s,box-shadow .4s}
+.card:hover{transform:perspective(1000px) rotateY(8deg) rotateX(-4deg) translateZ(20px);box-shadow:0 20px 50px rgba(0,255,157,.2)}
+.card-img{position:relative;height:13rem;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;opacity:.6;filter:grayscale(100%);transition:all .7s}
+.card:hover .card-img img{transform:scale(1.1);opacity:.8;filter:grayscale(0)}
+.card-img .overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--card),transparent)}
+.card-body{padding:1.5rem}
+.card-body h3{font-size:1.25rem;font-weight:700;color:#fff;margin-bottom:.75rem;transition:color .15s}
+.card:hover .card-body h3{color:var(--green)}
+.card-body p{font-size:.875rem;line-height:1.625;color:var(--muted);margin-bottom:1.25rem}
+.card-meta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--dim);margin-bottom:.75rem}
+
+.bball-section{border-top:1px solid rgba(255,107,26,.1);border-bottom:1px solid rgba(255,107,26,.1);background:rgba(12,18,26,.8);padding:6rem 0}
+.bball-grid{display:grid;gap:3rem;align-items:center}
+.bball-text h2{font-size:2.25rem;font-weight:700;color:#fff;margin-bottom:1.5rem}
+.bball-text p{max-width:36rem;line-height:1.625;color:var(--muted)}
+.bball-visual{position:relative;display:flex;height:18rem;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(255,107,26,.2);background:var(--bg)}
+.bball-visual .grid-bg{position:absolute;inset:0;opacity:.4}
+@keyframes orbit{0%{transform:rotate(0) translateX(120px) rotate(0)}100%{transform:rotate(360deg) translateX(120px) rotate(-360deg)}}
+.orbit-icon{position:absolute;color:var(--cyan);animation:orbit 10s linear infinite}
+
+.contact{padding:6rem 0}
+.contact-grid{display:grid;gap:3.5rem}
+.contact-info h2{font-size:2.25rem;font-weight:700;color:#fff;margin-bottom:1.25rem}
+.contact-info p{max-width:28rem;line-height:1.625;color:var(--muted);margin-bottom:2rem}
+.contact-links{display:flex;flex-direction:column;gap:1rem;font-family:'JetBrains Mono',monospace;font-size:.75rem}
+.contact-links a{display:flex;align-items:center;gap:1rem;color:var(--muted);transition:color .15s}
+.contact-links a:hover{color:var(--green)}
+.contact-form{border:1px solid rgba(255,255,255,.1);background:var(--card);padding:1.5rem}
+.form-row{display:grid;gap:1.25rem;margin-bottom:1.5rem}
+.form-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim)}
+.form-input{width:100%;border:none;border-bottom:1px solid rgba(255,255,255,.2);background:transparent;padding:.75rem 0;font-size:.875rem;color:#fff;outline:none;transition:border-color .15s}
+.form-input:focus{border-color:var(--green)}
+.form-input::placeholder{color:#475569}
+textarea.form-input{resize:none}
+.form-btn{display:flex;align-items:center;gap:.5rem;background:var(--cyan);color:var(--bg);padding:.75rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;text-transform:uppercase;transition:all .15s}
+.form-btn:hover{background:#a6f5ff}
+
+footer{position:relative;z-index:10;border-top:1px solid rgba(0,255,157,.1);background:#080b10}
+.footer-inner{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1.25rem;padding:2rem 1.25rem;max-width:80rem;margin:0 auto}
+
+@keyframes igSpin{0%{transform:rotateY(0) rotateX(10deg)}100%{transform:rotateY(360deg) rotateX(10deg)}}
+@keyframes igFloat{0%,100%{translate:0 0}50%{translate:0 -8px}}
+.ig-3d{perspective:1000px;display:flex;align-items:center;justify-content:center}
+.ig-3d-inner{position:relative;transform-style:preserve-3d;animation:igSpin 5s linear infinite,igFloat 3s ease-in-out infinite}
+.ig-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:28%;border:2px solid rgba(255,255,255,.3);background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);box-shadow:0 0 20px rgba(220,39,67,.4)}
+.ig-face .lens{border-radius:50%;border:2px solid #fff;width:45%;height:45%}
+.ig-face .dot-w{position:absolute;border-radius:50%;background:#fff;width:12%;height:12%;top:18%;right:18%}
+
+@media(min-width:640px){
+  .hero-title{font-size:4.5rem}
+  .hero-grid{grid-template-columns:1.05fr .95fr;align-items:center}
+  .skills{grid-template-columns:repeat(4,1fr)}
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .form-row{grid-template-columns:1fr 1fr}
+  .nav-desktop{display:flex}
+  .menu-btn{display:none}
+  .online-badge{display:flex}
+  .footer-inner{flex-direction:row}
+  .journal-head{flex-direction:row;align-items:flex-end}
+}
+@media(min-width:768px){.nav-mobile{display:none!important}}
+@media(min-width:1024px){
+  .hero-title{font-size:6rem}
+  .about-grid{grid-template-columns:.8fr 1.2fr}
+  .bball-grid{grid-template-columns:1fr .8fr}
+  .contact-grid{grid-template-columns:.8fr 1.2fr}
+  .container{padding:0 2rem}
+}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <canvas id="matrix"></canvas>
+  <div class="scanlines"></div>
+  <div class="login-box">
+    <div class="login-window">
+      <div class="login-bar">
+        <div style="display:flex;gap:.5rem">
+          <div class="dot" style="background:#ff5f56"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#27c93f"></div>
+        </div>
+        <div class="mono" style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--green)">secure_terminal</div>
+        <div class="mono" style="font-size:10px;color:var(--dim)">v2.0</div>
+      </div>
+      <div class="login-body">
+        <div id="bootLines"></div>
+        <div id="loginForm" style="display:none">
+          <form id="authForm" class="fade-in">
+            <div class="mono" style="font-size:.75rem;color:var(--cyan);margin-bottom:1rem">&gt; Please enter your credentials:</div>
+            <input class="login-input" type="text" id="username" placeholder="username" autofocus>
+            <input class="login-input" type="password" id="password" placeholder="password (optional)">
+            <div id="loginError" class="mono" style="font-size:.75rem;color:var(--orange);display:none;margin-bottom:1rem"></div>
+            <button class="login-btn" type="submit">Authenticate <span class="cursor">_</span></button>
+            <div class="mono" style="font-size:10px;color:var(--dim);text-align:center;margin-top:.75rem">Press Enter or click to access Valdy's blog</div>
+          </form>
+        </div>
+        <div id="authProgress" style="display:none" class="fade-in">
+          <div class="mono" style="font-size:.75rem;color:var(--green)" id="progressText">&gt; Authenticating... 0%</div>
+          <div class="progress-bar" style="margin-top:.75rem"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mono" style="font-size:10px;color:var(--dim);text-align:center;margin-top:1rem">VALDY_OS // SECURE CONNECTION ESTABLISHED // 256-BIT ENCRYPTED</div>
+  </div>
+</div>
+
+<div id="site" style="display:none;position:relative;min-height:100vh;overflow:hidden">
+  <canvas id="matrix2"></canvas>
+  <div class="scanlines"></div>
+
+  <header>
+    <div class="header-inner">
+      <button class="logo" onclick="scrollTo('home')">
+        <div class="logo-mark">V_</div>
+        <span class="mono" style="font-size:.875rem;letter-spacing:.1em;color:#fff;display:none" id="logoText">VALDY<span style="color:var(--green)">.DEV</span></span>
+      </button>
+      <nav class="nav-desktop" id="navDesktop"></nav>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <button class="online-badge" onclick="scrollTo('contact')">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 2s infinite"></span> online
+        </button>
+        <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="nav-mobile" id="navMobile"></div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-grid">
+        <div class="fade-in">
+          <div class="mono" style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;letter-spacing:.25em;color:var(--green);margin-bottom:1.5rem">
+            &gt; ACCESS GRANTED // WELCOME <span class="cursor">_</span>
+          </div>
+          <h1 class="hero-title glitch">Hi, I'm <span class="neon-g">Valdy</span><span style="color:var(--cyan)">.</span></h1>
+          <div class="hero-sub">
+            <span style="color:var(--green)">&gt;</span> exploring technology <span style="color:var(--orange)">+</span> playing basketball
+          </div>
+          <p class="hero-desc">Tempat saya berbagi rasa penasaran tentang teknologi, cerita dari lapangan, dan hal-hal menarik di antara keduanya. Selamat datang di ruang digital saya.</p>
+          <div class="hero-btns">
+            <button class="btn-primary" onclick="scrollTo('journal')">Explore journal &darr;</button>
+            <button class="btn-ghost" onclick="scrollTo('about')">Who is Valdy? &rarr;</button>
+          </div>
+          <div class="hero-stats">
+            <span><b class="neon-g" style="font-size:1.125rem">02</b> passions</span>
+            <span><b class="neon-c" style="font-size:1.125rem">&infin;</b> curiosity</span>
+            <span><b class="neon-o" style="font-size:1.125rem">24/7</b> learning</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="glow"></div>
+          <div class="grid-bg"></div>
+          <div class="mono" style="position:absolute;left:8%;top:10%;font-size:10px;color:rgba(0,255,157,.5)">&lt;div className="life"&gt;</div>
+          <div class="mono" style="position:absolute;bottom:10%;right:6%;font-size:10px;color:rgba(0,229,255,.5)">&lt;/explore&gt;</div>
+          <div style="position:absolute;left:4%;top:50%;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 15px var(--green)"></div>
+          <div style="position:absolute;right:8%;top:28%;width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 15px var(--orange)"></div>
+          <div id="heroBall" style="position:absolute;left:2%;top:28%;transform:rotate(-15deg);opacity:.9"></div>
+          <div id="heroLaptop" style="position:absolute;right:-3%;top:16%;opacity:.9"></div>
+          <div id="heroCube" style="position:absolute;bottom:2%;left:50%;transform:translateX(-50%)"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-img">
+            <img src="https://images.pexels.com/photos/5380669/pexels-photo-5380669.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Valdy">
+            <div class="mono" style="position:absolute;left:1.25rem;top:1.25rem;font-size:9px;color:var(--green)">IMG_001 // VALDY</div>
+            <div class="mono" style="position:absolute;bottom:1.25rem;right:1.25rem;font-size:9px;color:var(--cyan)">STATUS: CURIOUS</div>
+          </div>
+          <div class="about-text">
+            <div class="mono" style="display:flex;align-items:center;gap:.75rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.25em;color:var(--cyan);margin-bottom:1rem">
+              <span style="height:1px;width:2rem;background:var(--cyan)"></span>01 // About me
+            </div>
+            <h2>Curious by nature.<br><span class="gradient-text">Builder by choice.</span></h2>
+            <p>Saya Valdy &mdash; seorang yang selalu penasaran dengan cara kerja sesuatu. Dari baris kode yang sederhana sampai teknologi yang mengubah masa depan, saya suka membongkar, memahami, dan menciptakan.</p>
+            <p>Ketika tidak sedang mengeksplorasi dunia digital, kamu bisa menemukan saya di lapangan basket. Bagi saya, coding dan basket punya satu kesamaan: selalu ada ruang untuk menjadi lebih baik.</p>
+            <div class="skills">
+              <div class="skill"><div style="color:var(--green);margin-bottom:.5rem">&lt;/&gt;</div><span>CODING</span></div>
+              <div class="skill"><div style="color:var(--cyan);margin-bottom:.5rem">&#9889;</div><span>TECH</span></div>
+              <div class="skill"><div style="color:var(--orange);margin-bottom:.5rem">&#9741;</div><span>EXPLORE</span></div>
+              <div class="skill"><div style="color:var(--green);margin-bottom:.5rem">&#9881;</div><span>LEARN</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="journal" class="journal">
+      <div class="container">
+        <div class="journal-head">
+          <div>
+            <div class="mono" style="display:flex;align-items:center;gap:.75rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.25em;color:var(--green);margin-bottom:1rem">
+              <span style="height:1px;width:2rem;background:var(--green)"></span>02 // Journal
+            </div>
+            <h2>Things I've been <span class="neon-g">thinking about.</span></h2>
+          </div>
+          <div class="mono" style="font-size:.75rem;color:var(--dim)">LOG_ENTRIES: <span style="color:var(--green)">03</span></div>
+        </div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </section>
+
+    <section class="bball-section">
+      <div class="container">
+        <div class="bball-grid">
+          <div class="bball-text">
+            <div class="mono" style="display:flex;align-items:center;gap:.75rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.25em;color:var(--orange);margin-bottom:1rem">
+              <span style="height:1px;width:2rem;background:var(--orange)"></span>03 // Beyond the screen
+            </div>
+            <h2>Code on screen.<br><span class="neon-o">Game on court.</span></h2>
+            <p>Basketball mengajarkan saya tentang teamwork, membaca situasi, dan tidak pernah menyerah sebelum peluit akhir. Nilai-nilai yang sama selalu saya bawa saat membangun sesuatu.</p>
+          </div>
+          <div class="bball-visual">
+            <div class="grid-bg"></div>
+            <div style="position:absolute;width:12rem;height:12rem;border-radius:50%;border:1px solid rgba(255,107,26,.2)"></div>
+            <div style="position:absolute;width:16rem;height:16rem;border-radius:50%;border:1px dashed rgba(0,229,255,.2)"></div>
+            <div class="orbit-icon">&#10086;</div>
+            <div style="position:relative;z-index:10" id="bballOrb"></div>
+            <div class="mono" style="position:absolute;bottom:1rem;left:1rem;font-size:9px;color:var(--orange)">ENERGY_LEVEL: MAX</div>
+            <div class="mono" style="position:absolute;right:1rem;top:1rem;font-size:9px;color:var(--cyan)">LOOP: INFINITE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info">
+            <div class="mono" style="display:flex;align-items:center;gap:.75rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.25em;color:var(--cyan);margin-bottom:1rem">
+              <span style="height:1px;width:2rem;background:var(--cyan)"></span>04 // Contact
+            </div>
+            <h2>Let's <span class="neon-c">connect.</span></h2>
+            <p>Punya ide, pertanyaan, atau sekadar ingin ngobrol tentang teknologi dan basket? Kirim pesan, saya akan senang mendengarnya.</p>
+            <div class="contact-links">
+              <a href="mailto:sadewavaldy@gmail.com">&#9993; sadewavaldy@gmail.com</a>
+              <a href="https://www.instagram.com/vinutzz" target="_blank">&#9745; @vinutzz</a>
+            </div>
+          </div>
+          <form class="contact-form" id="contactForm">
+            <div class="form-row">
+              <label class="form-label">Your name<input class="form-input" required name="name" type="text" placeholder="John Doe"></label>
+              <label class="form-label">Your email<input class="form-input" required name="email" type="email" placeholder="john@email.com"></label>
+            </div>
+            <label class="form-label">Message<textarea class="form-input" required name="message" rows="4" placeholder="Tell me what's on your mind..."></textarea></label>
+            <div style="margin-top:1.75rem;display:flex;align-items:center;gap:1rem">
+              <button class="form-btn" type="submit">Send message &rarr;</button>
+              <span id="formOk" class="mono" style="font-size:.75rem;color:var(--green);display:none">[&#10003;] Message transmitted.</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="mono" style="font-size:.75rem;color:var(--dim)">&copy; 2026 <span style="color:var(--green)">VALDY</span> // built with curiosity</div>
+      <div class="mono" style="font-size:10px;color:var(--green)">STATUS: ONLINE</div>
+    </div>
+  </footer>
+</div>
+<script>
+var IG='https://www.instagram.com/vinutzz';
+var imgs={laptop:'https://images.pexels.com/photos/5483071/pexels-photo-5483071.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',game:'https://images.pexels.com/photos/32600343/pexels-photo-32600343.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',hacker:'https://images.pexels.com/photos/5380669/pexels-photo-5380669.jpeg?auto=compress&cs=tinysrgb&h=650&w=940'};
+var posts=[
+{n:'01',cat:'TECHNOLOGY',date:'08.09.2026',title:'Menyelami Dunia Teknologi: Lebih Dari Sekadar Kode',excerpt:'Teknologi bukan hanya tentang bagaimana sesuatu dibuat, tapi juga tentang bagaimana ia mengubah cara kita melihat dunia.',img:imgs.laptop,color:'#00ff9d'},
+{n:'02',cat:'BASKETBALL',date:'01.09.2026',title:'Basketball & Coding: Dua Dunia Yang Sama',excerpt:'Di lapangan maupun di depan layar, strategi, fokus, dan konsistensi adalah kunci untuk terus berkembang.',img:imgs.game,color:'#ff6b1a'},
+{n:'03',cat:'CYBERSPACE',date:'25.08.2026',title:'Mengenal Sisi Gelap & Cerah Dunia Digital',excerpt:'Eksplorasi tentang keamanan digital, etika teknologi, dan rasa penasaran yang mendorong kita untuk belajar.',img:imgs.hacker,color:'#00e5ff'}
+];
+
+function matrix(canvas){
+var c=canvas.getContext('2d');
+function rz(){canvas.width=innerWidth;canvas.height=innerHeight}rz();onresize=rz;
+var ch='01\u30a2\u30a4\u30a6\u30a8\u30aa\u30ab\u30ad\u30af\u30b1\u30b3\u30b5\u30b7\u30b9\u30bb\u30bd\u30bf\u30c1\u30c4\u30c6\u30c8<>{}[]/=+*'.split('');
+var fs=14,cols=Math.floor(canvas.width/fs),drops=Array(cols).fill(1),sp=Array(cols).fill(0).map(function(){return Math.random()*.5+.3});
+setInterval(function(){
+c.fillStyle='rgba(10,14,20,0.06)';c.fillRect(0,0,canvas.width,canvas.height);c.font=fs+'px JetBrains Mono';
+for(var i=0;i<drops.length;i++){
+var t=ch[Math.floor(Math.random()*ch.length)],x=i*fs,y=drops[i]*fs;
+c.fillStyle=Math.random()>.975?'#00e5ff':'#00ff9d';c.fillText(t,x,y);
+if(y>canvas.height&&Math.random()>.975)drops[i]=0;drops[i]+=sp[i];
+}},50)}
+
+function makeBall(){
+return '<div class="bball-wrap"><div class="bball"><div class="skin"></div><div class="line-v"></div><div class="line-h"></div><div class="shine"></div></div></div>'}
+
+function makeLaptop(){
+return '<div class="bball-wrap"><div class="laptop"><div class="screen">'+
+'<div style="color:#00ff9d">&gt; const valdy = {</div>'+
+'<div style="color:#00e5ff;padding-left:.75rem">name: "Valdy",</div>'+
+'<div style="color:#ff6b1a;padding-left:.75rem">hobby: ["coding","basketball"],</div>'+
+'<div style="color:#00ff9d">};</div>'+
+'<div style="color:#00ff9d;margin-top:.25rem">&gt; valdy.run();</div>'+
+'<div style="color:#00e5ff">[\u2713] System online...</div>'+
+'<div style="color:#ff6b1a">[\u2713] Exploring tech...</div>'+
+'<div style="color:#00ff9d" class="cursor">&gt; _</div>'+
+'</div><div class="base"></div></div></div>'}
+
+function makeCube(){
+var s=60,faces=[['translateZ('+s+'px)','</>','#00ff9d'],['rotateY(180deg) translateZ('+s+'px)','{ }','#00e5ff'],['rotateY(90deg) translateZ('+s+'px)','[ ]','#ff6b1a'],['rotateY(-90deg) translateZ('+s+'px)','( )','#00ff9d'],['rotateX(90deg) translateZ('+s+'px)','=>','#00e5ff'],['rotateX(-90deg) translateZ('+s+'px)','!=','#ff6b1a']];
+var h='<div class="cube-wrap"><div class="cube">';
+faces.forEach(function(f){h+='<div class="cube-face" style="transform:'+f[0]+';border:1px solid '+f[2]+';background:linear-gradient(135deg,rgba(10,14,20,.9),rgba(15,22,32,.9));color:'+f[2]+';box-shadow:0 0 15px '+f[2]+'40;text-shadow:0 0 10px '+f[2]+'">'+f[1]+'</div>'});
+return h+'</div></div>'}
+
+var boot=['> Initializing VALDY_OS v2.0.26...','> Loading kernel modules............[OK]','> Mounting filesystem /dev/valdy....[OK]','> Starting network services........[OK]','> Establishing secure connection....[OK]','> Decrypting personal data..........[OK]','> Loading 3D rendering engine......[OK]','> Checking authentication..........[WAIT]','','> SYSTEM READY. PLEASE AUTHENTICATE.'];
+var bi=0,msgs=[];
+function renderBoot(){
+var h='';
+for(var i=0;i<bi&&i<boot.length;i++){
+var l=boot[i],cls='color:#94a3b8';
+if(l.indexOf('[OK]')>-1)cls='color:#00ff9d';
+else if(l.indexOf('[WAIT]')>-1)cls='color:#ff6b1a';
+else if(l.indexOf('READY')>-1||l.indexOf('AUTHENTICATE')>-1)cls='color:#00e5ff';
+h+='<div style="'+cls+'">'+(l||'&nbsp;')+'</div>'}
+msgs.forEach(function(m){h+='<div style="color:#00ff9d">'+m+'</div>'});
+var el=document.getElementById('bootLines');el.innerHTML=h;el.scrollTop=el.scrollHeight}
+function nextBoot(){
+if(bi<boot.length){bi++;renderBoot();setTimeout(nextBoot,bi===1?300:boot[bi-2]===''?200:280)}
+else setTimeout(function(){document.getElementById('loginForm').style.display='block'},400)}
+
+document.getElementById('authForm').addEventListener('submit',function(e){
+e.preventDefault();
+var u=document.getElementById('username').value;
+if(!u.trim()){var err=document.getElementById('loginError');err.textContent='> ERROR: username required.';err.style.display='block';return}
+document.getElementById('loginError').style.display='none';
+document.getElementById('loginForm').style.display='none';
+document.getElementById('authProgress').style.display='block';
+var steps=['> Verifying credentials...','> Access granted.','> Welcome, '+u+'.','> Loading personal blog...'],si=0;
+var si2=setInterval(function(){if(si<steps.length){msgs.push(steps[si]);renderBoot();si++}else clearInterval(si2)},400);
+var p=0,pi=setInterval(function(){
+p+=4;
+if(p>=100){p=100;clearInterval(pi);clearInterval(si2);
+document.getElementById('progressText').textContent='> Authenticating... 100%';
+document.getElementById('progressFill').style.width='100%';
+setTimeout(function(){
+document.getElementById('login').style.opacity='0';
+setTimeout(function(){document.getElementById('login').style.display='none';document.getElementById('site').style.display='block';initSite()},700)},300)}
+document.getElementById('progressText').textContent='> Authenticating... '+p+'%';
+document.getElementById('progressFill').style.width=p+'%'},50)});
+
+function scrollTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});closeMenu()}
+
+var menuOpen=false;
+function toggleMenu(){menuOpen=!menuOpen;document.getElementById('navMobile').style.display=menuOpen?'block':'none'}
+function closeMenu(){if(menuOpen)toggleMenu()}
+
+function initSite(){
+matrix(document.getElementById('matrix2'));
+document.getElementById('logoText').style.display='inline';
+var items=['home','about','journal','contact'];
+var nd=document.getElementById('navDesktop');
+items.forEach(function(item,i){var a=document.createElement('a');a.href='javascript:scrollTo("'+item+'")';a.innerHTML='<span style="color:rgba(0,255,157,.6)">0'+(i+1)+'</span> '+item;nd.appendChild(a)});
+var nm=document.getElementById('navMobile');
+items.forEach(function(item,i){var a=document.createElement('a');a.href='javascript:scrollTo("'+item+'")';a.innerHTML='<span style="color:var(--green)">0'+(i+1)+'</span> '+item;nm.appendChild(a)});
+document.getElementById('heroBall').innerHTML=makeBall();
+document.getElementById('heroLaptop').innerHTML=makeLaptop();
+document.getElementById('heroCube').innerHTML=makeCube();
+document.getElementById('bballOrb').innerHTML=makeBall();
+var cards=document.getElementById('cards');
+posts.forEach(function(p){
+var c=document.createElement('div');c.className='card';
+c.innerHTML='<div class="card-img"><img src="'+p.img+'" alt="'+p.title+'"><div class="overlay"></div><span class="mono" style="position:absolute;left:1rem;top:1rem;font-size:.75rem;font-weight:700;color:'+p.color+'">'+p.cat+'</span><span class="mono" style="position:absolute;right:1rem;top:1rem;font-size:1.875rem;font-weight:700;color:rgba(255,255,255,.2)">'+p.n+'</span></div><div class="card-body"><div class="card-meta">'+p.date+' // VALDY</div><h3>'+p.title+'</h3><p>'+p.excerpt+'</p><button class="mono" style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan)">Read entry &rarr;</button></div>';
+cards.appendChild(c)});
+document.getElementById('contactForm').addEventListener('submit',function(e){
+e.preventDefault();document.getElementById('formOk').style.display='inline';this.reset();
+setTimeout(function(){document.getElementById('formOk').style.display='none'},4000)})}
+
+matrix(document.getElementById('matrix'));
+nextBoot();
+</script>
+</body>
+</html>
